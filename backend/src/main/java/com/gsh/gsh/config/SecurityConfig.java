@@ -53,6 +53,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/doctors").permitAll()
                         .requestMatchers("/api/doctors/**").permitAll()
                         .requestMatchers("/api/slots/**").permitAll()
+                        .requestMatchers("/api/users/me").authenticated()
+                        .requestMatchers("/api/users/**").authenticated()
                         .requestMatchers("/swagger-ui.html").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs").permitAll()
@@ -66,3 +68,4 @@ public class SecurityConfig {
         return http.build();
     }
 }
+

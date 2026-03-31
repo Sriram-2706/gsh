@@ -9,7 +9,7 @@ export default function Doctors() {
   const [doctors, setDoctors] = useState([]);
   const [specialtyName, setSpecialtyName] = useState("");
   const [error, setError] = useState("");
-  const [mode, setMode] = useState(null);
+  const [mode, setMode] = useState("ALL");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,9 +18,8 @@ export default function Doctors() {
         const specRes = await axios.get(`/specialties/${id}`);
         setSpecialtyName(specRes.data.name);
         
-        // Use query param approach from req.txt
         let url = `/doctors?specialty=${id}`;
-        if (mode) {
+        if (mode && mode !== "ALL") {
           url += `&mode=${mode}`;
         }
         const docRes = await axios.get(url);
@@ -48,10 +47,14 @@ export default function Doctors() {
           <ToggleButtonGroup
             value={mode}
             exclusive
-            onChange={(event, newMode) => setMode(newMode)}
+            onChange={(event, newMode) => {
+              if (newMode !== null) {
+                setMode(newMode);
+              }
+            }}
             aria-label="consultation mode"
           >
-            <ToggleButton value={null}>All</ToggleButton>
+            <ToggleButton value="ALL">All</ToggleButton>
             <ToggleButton value="ONLINE">Online</ToggleButton>
             <ToggleButton value="OFFLINE">Offline</ToggleButton>
           </ToggleButtonGroup>

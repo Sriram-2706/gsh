@@ -1,11 +1,11 @@
 package com.gsh.gsh.controller;
 
 import com.gsh.gsh.entity.User;
-import com.gsh.gsh.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,12 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "User Management", description = "APIs for user information")
 public class UserController {
 
-    private final UserRepository userRepository;
-
     @GetMapping("/me")
     @Operation(summary = "Get current authenticated user")
     public ResponseEntity<UserResponse> getCurrentUser() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        
+        if (authentication == null || !authentication.isAuthenticated() || !(authentication.getPrincipal() instanceof User)) {
+            throw new RuntimeException("User not authenticated");
+        }
+
+        User user = (User) authentication.getPrincipal();
         return ResponseEntity.ok(new UserResponse(user.getId(), user.getName(), user.getEmail(), user.getRole().toString()));
     }
 
