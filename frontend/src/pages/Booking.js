@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import axios from "../api/axios";
 import { Box, Typography, Card, CardContent, Button, Alert, CircularProgress } from "@mui/material";
+import { useAuth } from "../context/AuthContext";
 
 export default function Booking() {
   const { doctorId, slotId } = useParams();
   const navigate = useNavigate();
+  const { isAuthenticated, loading: authLoading } = useAuth();
 
   const [user, setUser] = useState(null);
   const [doctor, setDoctor] = useState(null);
@@ -16,26 +18,33 @@ export default function Booking() {
   const [booking, setBooking] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const userRes = await axios.get("/users/me");
-        setUser(userRes.data);
+    if (!authLoading && !isAuthenticated) {
+      navigate("/login");
+      return;
+    }
 
-        const docRes = await axios.get(`/doctors/${doctorId}`);
-        setDoctor(docRes.data);
+    if (!authLoading && isAuthenticated) {
+      const fetchData = async () => {
+        try {
+          setLoading(true);
+          const userRes = await axios.get("/users/me");
+          setUser(userRes.data);
 
-        const slotRes = await axios.get(`/slots/by-id/${slotId}`);
-        setSlot(slotRes.data);
-      } catch (err) {
-        console.error("Error:", err);
-        setError(err.response?.data?.message || "Failed to load booking details");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [doctorId, slotId]);
+          const docRes = await axios.get(`/doctors/${doctorId}`);
+          setDoctor(docRes.data);
+
+          const slotRes = await axios.get(`/slots/by-id/${slotId}`);
+          setSlot(slotRes.data);
+        } catch (err) {
+          console.error("Error:", err);
+          setError(err.response?.data?.message || "Failed to load booking details");
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchData();
+    }
+  }, [doctorId, slotId, authLoading, isAuthenticated, navigate]);
 
   const formatDateTime = (datetime) => {
     if (!datetime) return "N/A";

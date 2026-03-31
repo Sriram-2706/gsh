@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import { TextField, Button, Box, Typography, Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -10,6 +11,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleLogin = async () => {
     setError("");
@@ -25,11 +27,8 @@ export default function Login() {
       const response = await axios.post("/auth/login", { email, password });
       const token = response.data;
       
-      // Store token in localStorage
-      localStorage.setItem("token", token);
-      
-      // Update axios default header
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      // Use AuthContext login — stores token, sets header, fetches user, updates state
+      await login(token);
       
       // Redirect to dashboard
       navigate("/dashboard");

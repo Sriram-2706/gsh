@@ -2,29 +2,35 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import axios from "../api/axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Dashboard() {
   const [data, setData] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { isAuthenticated, loading: authLoading } = useAuth();
 
   useEffect(() => {
-    const fetchSpecialties = async () => {
-      try {
-        console.log("Fetching specialties...");
-        const response = await axios.get("/specialties");
-        console.log("Specialties fetched:", response.data);
-        setData(response.data);
-      } catch (err) {
-        console.error("Error fetching specialties:", err);
-        console.error("Status:", err.response?.status);
-        console.error("Data:", err.response?.data);
-        setError(err.response?.data?.message || "Failed to fetch specialties");
-      }
-    };
+    // Redirect to login if not authenticated (wait for auth check to finish)
+    if (!authLoading && !isAuthenticated) {
+      navigate("/login");
+      return;
+    }
 
-    fetchSpecialties();
-  }, []);
+    if (!authLoading && isAuthenticated) {
+      const fetchSpecialties = async () => {
+        try {
+          const response = await axios.get("/specialties");
+          setData(response.data);
+        } catch (err) {
+          console.error("Error fetching specialties:", err);
+          setError(err.response?.data?.message || "Failed to fetch specialties");
+        }
+      };
+
+      fetchSpecialties();
+    }
+  }, [authLoading, isAuthenticated, navigate]);
 
   return (
     <>
