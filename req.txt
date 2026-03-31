@@ -1,0 +1,139 @@
+========================================
+DOCTOR APPOINTMENT SYSTEM - FULL DESIGN
+========================================
+
+1. ENTITIES (TABLES WITH ATTRIBUTES)
+
+----------------------------------------
+USER (PATIENT)
+----------------------------------------
+id              : Long (Primary Key)
+name            : String
+email           : String (Unique)
+password        : String
+role            : String (PATIENT / ADMIN)
+
+----------------------------------------
+SPECIALTY
+----------------------------------------
+id              : Long (Primary Key)
+name            : String
+
+----------------------------------------
+DOCTOR
+----------------------------------------
+id              : Long (Primary Key)
+name            : String
+specialty_id    : Long (Foreign Key)
+mode            : String (ONLINE / OFFLINE)
+experience      : Integer
+consultationFee : Double
+
+----------------------------------------
+SLOT
+----------------------------------------
+id              : Long (Primary Key)
+doctor_id       : Long (Foreign Key)
+startTime       : DateTime
+endTime         : DateTime
+isBooked        : Boolean
+
+----------------------------------------
+APPOINTMENT
+----------------------------------------
+id              : Long (Primary Key)
+patient_id      : Long (Foreign Key)
+doctor_id       : Long (Foreign Key)
+slot_id         : Long (Foreign Key - Unique)
+mode            : String (ONLINE / OFFLINE)
+status          : String (CONFIRMED / COMPLETED / CANCELLED / NO_SHOW)
+bookingTime     : DateTime
+
+----------------------------------------
+2. RELATIONSHIPS
+----------------------------------------
+
+SPECIALTY 1 ---- N DOCTOR
+DOCTOR 1 ---- N SLOT
+USER 1 ---- N APPOINTMENT
+DOCTOR 1 ---- N APPOINTMENT
+SLOT 1 ---- 1 APPOINTMENT
+
+----------------------------------------
+3. API ENDPOINTS
+----------------------------------------
+
+AUTH APIs:
+POST   /api/auth/register
+POST   /api/auth/login
+
+SPECIALTY APIs:
+GET    /api/specialties
+
+DOCTOR APIs:
+GET    /api/doctors?specialty={id}&mode={ONLINE/OFFLINE}
+
+SLOT APIs:
+GET    /api/slots/{doctorId}
+
+APPOINTMENT APIs:
+POST   /api/appointments/book
+GET    /api/appointments/user/{userId}
+PUT    /api/appointments/{id}/status
+
+
+----------------------------------------
+4. USER STORIES
+----------------------------------------
+
+1. As a patient, I want to browse specialties so that I can find relevant doctors.
+2. As a patient, I want to filter doctors by mode so that I can choose online or offline consultation.
+3. As a patient, I want to view available slots so that I can select a suitable time.
+4. As a patient, I want to book an appointment so that I can consult a doctor.
+5. As a patient, I want to receive confirmation so that I know my booking is successful.
+
+----------------------------------------
+5. USER FLOW
+----------------------------------------
+
+1. User registers/logs in
+2. User selects specialty
+3. User filters doctors by mode
+4. User selects doctor
+5. User views available slots
+6. User selects slot
+7. User books appointment
+8. System validates slot and doctor mode
+9. Appointment is created
+10. Slot is marked as booked
+11. Confirmation is shown
+
+----------------------------------------
+6. CONSTRAINTS (BUSINESS RULES)
+----------------------------------------
+
+1. Online and Offline appointments must use different doctors
+2. A slot can be booked only once (no double booking)
+3. Appointment must have a valid slot
+4. Status flow:
+   CONFIRMED → COMPLETED / CANCELLED / NO_SHOW
+5. Slot cannot be in the past
+6. Email must be unique
+7. Mode must match doctor’s mode
+
+----------------------------------------
+7. CORE FUNCTIONALITIES
+----------------------------------------
+
+1. Browse specialties
+2. Filter doctors by specialty and mode
+3. View available slots
+4. Book appointment
+5. Prevent double booking
+6. Appointment lifecycle management
+7. Daily summary generation
+8. Secure authentication (JWT)
+
+----------------------------------------
+END OF DOCUMENT
+----------------------------------------
