@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Navbar from "../components/Navbar";
 import axios from "../api/axios";
 
 export default function Appointments() {
@@ -10,14 +11,16 @@ export default function Appointments() {
   }, []);
 
   return (
-    <div>
+    <>
+      <Navbar />
+
       <h2>My Appointments</h2>
 
-      {data.map(x => (
-        <div key={x.id}>
-          {x.status}
+      {data.map(a => (
+        <div key={a.id}>
+          {a.status}
         </div>
       ))}
-    </div>
+    </>
   );
 }

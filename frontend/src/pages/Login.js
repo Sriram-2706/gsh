@@ -11,17 +11,24 @@ export default function Login() {
     try {
       await axios.post("/auth/login", { email, password });
       alert("Login Successful");
-    } catch (e) {
-      alert("Error");
+    } catch {
+      alert("Login Failed");
     }
   };
 
   return (
     <>
       <Navbar />
+
       <div style={{ textAlign: "center", marginTop: "50px" }}>
-        <TextField label="Email" onChange={(e) => setEmail(e.target.value)} /><br /><br />
-        <TextField label="Password" type="password" onChange={(e) => setPassword(e.target.value)} /><br /><br />
+        <TextField label="Email" onChange={(e) => setEmail(e.target.value)} />
+        <br /><br />
+        <TextField
+          label="Password"
+          type="password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <br /><br />
 
         <Button variant="contained" onClick={handleLogin}>
           Login

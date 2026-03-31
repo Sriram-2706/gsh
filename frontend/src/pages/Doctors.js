@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Navbar from "../components/Navbar";
 import axios from "../api/axios";
 
 export default function Doctors() {
@@ -11,10 +12,12 @@ export default function Doctors() {
   useEffect(() => {
     axios.get(`/doctors?specialty=${id}&mode=${mode}`)
       .then(res => setDoctors(res.data));
-  }, [mode, id]);
+  }, [id, mode]);
 
   return (
-    <div>
+    <>
+      <Navbar />
+
       <h2>Doctors</h2>
 
       <button onClick={() => setMode("ONLINE")}>Online</button>
@@ -25,6 +28,6 @@ export default function Doctors() {
           {d.name}
         </div>
       ))}
-    </div>
+    </>
   );
 }

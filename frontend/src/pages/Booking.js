@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
 import axios from "../api/axios";
 
 export default function Booking() {
@@ -17,9 +18,11 @@ export default function Booking() {
   };
 
   return (
-    <div>
+    <>
+      <Navbar />
+
       <h2>Confirm Booking</h2>
       <button onClick={book}>Confirm</button>
-    </div>
+    </>
   );
 }
