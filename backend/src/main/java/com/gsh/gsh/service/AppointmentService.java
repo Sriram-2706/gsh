@@ -42,6 +42,14 @@ public class AppointmentService {
             throw new RuntimeException("Slot is already booked");
         }
 
+        if (slot.getStartTime().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("Cannot book a slot in the past");
+        }
+
+        if (!doctor.getMode().equalsIgnoreCase(request.getMode())) {
+            throw new RuntimeException("Doctor mode does not match requested mode");
+        }
+
         Appointment appointment = new Appointment();
         appointment.setPatient(patient);
         appointment.setDoctor(doctor);
