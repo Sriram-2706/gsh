@@ -34,9 +34,21 @@ public class DoctorController {
     }
 
     @GetMapping
-    @Operation(summary = "Get all doctors")
-    public ResponseEntity<List<DoctorResponse>> getAllDoctors() {
-        return ResponseEntity.ok(doctorService.getAllDoctors());
+    @Operation(summary = "Get all doctors or filter by specialty and mode")
+    public ResponseEntity<List<DoctorResponse>> getAllDoctors(
+            @RequestParam(required = false) Long specialty,
+            @RequestParam(required = false) String mode) {
+        if (specialty != null && mode != null) {
+            List<DoctorResponse> doctors = doctorService.getDoctorsBySpecialty(specialty);
+            doctors.removeIf(d -> !d.getMode().equals(mode));
+            return ResponseEntity.ok(doctors);
+        } else if (specialty != null) {
+            return ResponseEntity.ok(doctorService.getDoctorsBySpecialty(specialty));
+        } else if (mode != null) {
+            return ResponseEntity.ok(doctorService.getDoctorsByMode(mode));
+        } else {
+            return ResponseEntity.ok(doctorService.getAllDoctors());
+        }
     }
 
     @GetMapping("/specialty/{specialtyId}")

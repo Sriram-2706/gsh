@@ -21,6 +21,13 @@ public class AppointmentController {
 
     private final AppointmentService appointmentService;
 
+    @PostMapping("/book")
+    @Operation(summary = "Book a new appointment (required endpoint)")
+    public ResponseEntity<AppointmentResponse> bookAppointment(@RequestBody AppointmentRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(appointmentService.createAppointment(request));
+    }
+
     @PostMapping
     @Operation(summary = "Create a new appointment")
     public ResponseEntity<AppointmentResponse> createAppointment(@RequestBody AppointmentRequest request) {
@@ -38,6 +45,12 @@ public class AppointmentController {
     @Operation(summary = "Get all appointments")
     public ResponseEntity<List<AppointmentResponse>> getAllAppointments() {
         return ResponseEntity.ok(appointmentService.getAllAppointments());
+    }
+
+    @GetMapping("/user/{userId}")
+    @Operation(summary = "Get appointments for a user (required endpoint)")
+    public ResponseEntity<List<AppointmentResponse>> getAppointmentsByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(appointmentService.getAppointmentsByPatient(userId));
     }
 
     @GetMapping("/patient/{patientId}")
@@ -68,9 +81,17 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.getDoctorAppointmentsByStatus(doctorId, status));
     }
 
+    @PutMapping("/{id}/status")
+    @Operation(summary = "Update appointment status (required endpoint)")
+    public ResponseEntity<AppointmentResponse> updateAppointmentStatus(
+            @PathVariable Long id,
+            @RequestParam AppointmentStatus status) {
+        return ResponseEntity.ok(appointmentService.updateAppointmentStatus(id, status));
+    }
+
     @PatchMapping("/{id}/status/{status}")
     @Operation(summary = "Update appointment status")
-    public ResponseEntity<AppointmentResponse> updateAppointmentStatus(
+    public ResponseEntity<AppointmentResponse> patchAppointmentStatus(
             @PathVariable Long id,
             @PathVariable AppointmentStatus status) {
         return ResponseEntity.ok(appointmentService.updateAppointmentStatus(id, status));

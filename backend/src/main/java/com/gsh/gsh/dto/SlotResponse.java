@@ -13,5 +13,5 @@ public class SlotResponse {
     private Long doctorId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private Boolean isBooked;
+    private Boolean booked;
 }

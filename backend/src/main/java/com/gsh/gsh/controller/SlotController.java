@@ -28,21 +28,27 @@ public class SlotController {
                 .body(slotService.createSlot(request));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{doctorId}")
+    @Operation(summary = "Get all available slots for a doctor")
+    public ResponseEntity<List<SlotResponse>> getSlotsByDoctor(@PathVariable Long doctorId) {
+        return ResponseEntity.ok(slotService.getAvailableSlotsByDoctor(doctorId));
+    }
+
+    @GetMapping("/by-id/{id}")
     @Operation(summary = "Get slot by ID")
     public ResponseEntity<SlotResponse> getSlotById(@PathVariable Long id) {
         return ResponseEntity.ok(slotService.getSlotById(id));
     }
 
-    @GetMapping
+    @GetMapping("/all")
     @Operation(summary = "Get all slots")
     public ResponseEntity<List<SlotResponse>> getAllSlots() {
         return ResponseEntity.ok(slotService.getAllSlots());
     }
 
-    @GetMapping("/doctor/{doctorId}")
-    @Operation(summary = "Get all slots for a doctor")
-    public ResponseEntity<List<SlotResponse>> getSlotsByDoctor(@PathVariable Long doctorId) {
+    @GetMapping("/doctor/{doctorId}/all")
+    @Operation(summary = "Get all slots for a doctor (including booked)")
+    public ResponseEntity<List<SlotResponse>> getAllSlotsByDoctor(@PathVariable Long doctorId) {
         return ResponseEntity.ok(slotService.getSlotsByDoctor(doctorId));
     }
 
