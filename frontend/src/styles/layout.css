@@ -1,0 +1,14 @@
+.page-container {
+  padding: 20px;
+}
+
+.center-box {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.flex-row {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}

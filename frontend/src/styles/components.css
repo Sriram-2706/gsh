@@ -1,0 +1,26 @@
+.card {
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  background: white;
+}
+
+.card:hover {
+  background: #f1f1f1;
+}
+
+.slot-btn {
+  padding: 10px;
+  margin: 5px;
+}
+
+.slot-booked {
+  background: gray;
+  color: white;
+}
+
+.slot-available {
+  background: green;
+  color: white;
+}
