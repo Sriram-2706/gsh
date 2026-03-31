@@ -1,0 +1,12 @@
+package com.gsh.gsh.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class SpecialtyRequest {
+    private String name;
+}
