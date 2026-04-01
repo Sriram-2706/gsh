@@ -1,21 +1,25 @@
-import { AppBar, Toolbar, Typography, Button } from "@mui/material";
+import Navbar from "../components/Navbar";
+import { Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-export default function Navbar() {
+export default function Home() {
   const navigate = useNavigate();
 
   return (
-    <AppBar position="static" style={{ background: "#1976d2" }}>
-      <Toolbar>
-        <Typography variant="h6" style={{ flexGrow: 1 }}>
-          GSH Hospital
-        </Typography>
+    <>
+      <Navbar />
 
-        <Button color="inherit" onClick={() => navigate("/")}>Home</Button>
-        <Button color="inherit" onClick={() => navigate("/dashboard")}>Booking</Button>
-        <Button color="inherit" onClick={() => navigate("/profile")}>Profile</Button>
-        <Button color="inherit" onClick={() => navigate("/login")}>Login</Button>
-      </Toolbar>
-    </AppBar>
+      <div style={{ textAlign: "center", marginTop: "60px" }}>
+        <Typography variant="h4">Welcome to GSH Hospital</Typography>
+
+        <Button
+          variant="contained"
+          sx={{ marginTop: "20px" }}
+          onClick={() => navigate("/dashboard")}
+        >
+          Book Appointment
+        </Button>
+      </div>
+    </>
   );
 }
