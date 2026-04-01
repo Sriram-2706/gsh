@@ -32,6 +32,18 @@ export default function Appointments() {
     }
   }, [authLoading, isAuthenticated, user, navigate]);
 
+  const formatDateTime = (datetime) => {
+    if (!datetime) return "N/A";
+    try {
+      return new Date(datetime).toLocaleString("en-IN", {
+        weekday: "short", year: "numeric", month: "short",
+        day: "numeric", hour: "2-digit", minute: "2-digit"
+      });
+    } catch (e) {
+      return datetime;
+    }
+  };
+
   const getStatusColor = (status) => {
     switch (status?.toUpperCase()) {
       case "CONFIRMED": return "success";
@@ -68,27 +80,33 @@ export default function Appointments() {
         {data.map(a => (
           <Card key={a.id} sx={{ marginBottom: "15px" }}>
             <CardContent>
-              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                 <Box>
-                  {a.doctorName && (
-                    <Typography variant="h6">Dr. {a.doctorName}</Typography>
-                  )}
-                  {a.specialtyName && (
-                    <Typography variant="body2" color="text.secondary">{a.specialtyName}</Typography>
-                  )}
-                  {a.startTime && (
-                    <Typography variant="body2" sx={{ marginTop: "5px" }}>
-                      {new Date(a.startTime).toLocaleString("en-IN", {
-                        weekday: "short", year: "numeric", month: "short",
-                        day: "numeric", hour: "2-digit", minute: "2-digit"
-                      })}
-                    </Typography>
-                  )}
-                  {a.mode && (
-                    <Typography variant="body2" color="text.secondary">Mode: {a.mode}</Typography>
-                  )}
+                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                    Dr. {a.doctorName}
+                  </Typography>
+
+                  <Typography variant="body2" sx={{ marginTop: "8px" }}>
+                    <strong>Appointment Time:</strong> {formatDateTime(a.slotStartTime)} — {formatDateTime(a.slotEndTime)}
+                  </Typography>
+
+                  <Typography variant="body2" sx={{ marginTop: "4px" }}>
+                    <strong>Mode:</strong> {a.mode}
+                  </Typography>
+
+                  <Typography variant="body2" sx={{ marginTop: "4px" }}>
+                    <strong>Patient:</strong> {a.patientName}
+                  </Typography>
+
+                  <Typography variant="body2" sx={{ marginTop: "4px", color: "text.secondary" }}>
+                    <strong>Booked on:</strong> {formatDateTime(a.bookingTime)}
+                  </Typography>
                 </Box>
-                <Chip label={a.status} color={getStatusColor(a.status)} />
+                <Chip
+                  label={a.status}
+                  color={getStatusColor(a.status)}
+                  sx={{ fontWeight: "bold", marginLeft: "15px" }}
+                />
               </Box>
             </CardContent>
           </Card>
